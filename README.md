@@ -1,4 +1,4 @@
-# 《webpack 包教不包会》
+# 《webpack（2） 包教不包会》
 
 ### 写在前面
 前期学习webpack的时候，总会看到有人把gulp和webpack拿来进行比较，其实这两者负责的工作不同，实现功能上会有些交集，gulp更是一种工具，用来优化前端工作流，比如说自动刷新页面，压缩css、js，编译sass、less这些，简单的说gulp能把以前重复性地需要手动完成的事情通过配置一系列gulp插件都自动帮你做了。  
@@ -19,9 +19,10 @@ webpack的作用：
 5、自定义程度高，你可以按需自定义打包的整个流程  
 6、适用于大project的开发场景  
 
+
 ## 课程列表
 
-* Lesson 0: [《搭建 webpack 环境》](https://github.com/kingvid-chan/webpack-lessons/tree/master/lesson0)
+* Lesson 0: [《搭建 webpack（2）》](https://github.com/kingvid-chan/webpack-lessons/tree/master/lesson0)
 
 ## 计划
 
