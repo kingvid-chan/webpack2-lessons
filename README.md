@@ -23,17 +23,24 @@ webpack的作用：
 ## 课程列表
 
 * Lesson 0: [《搭建 webpack（2）》](https://github.com/kingvid-chan/webpack-lessons/tree/master/lesson0)
+* Lesson 1: [《一个最简单的webpack应用》](https://github.com/kingvid-chan/webpack-lessons/tree/master/lesson1)
+* Lesson 2: [《使用webpack-dev-server实现热更新》](https://github.com/kingvid-chan/webpack-lessons/tree/master/lesson2)
+* Lesson 3: [《兼容开发和生产环境的配置文件》](https://github.com/kingvid-chan/webpack-lessons/tree/master/lesson3)
 
 ## 计划
 
-* 《webpack中各个配置参数的含义》
-* 《学会写loader》
-* 《学会写plugin》
+* 《学习简单的webpack配置，了解各配置选项的意义》
+* 《学习使用webpack-dev-server热更新》
+* 《学习配置较为复杂的工程构建》
+* 《学习怎么用Node API调用webpack》
+* 《学习如何写loader》
+* 《学习如何写plugin》
 
 ## 本课程特点
 
+* 一步一个脚印，由浅至深，引导读者跟随课程的节凑一起深入思考
 * 每一课的课程挑战如果有能力完成，则可考虑放弃阅读课程内容
-* 内容笼统，课程重点随心所欲
+* 内容讲解详细
 
 ## License
 

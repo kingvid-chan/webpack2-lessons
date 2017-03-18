@@ -25,15 +25,15 @@ webpack --config mywebpack.config.js
 在package.json中写入webpack和webpack-dev-server常用命令，如下，包括后期咱们还需要划分生产环境和开发环境来进行打包，这个时候npm命令能帮咱们省下不少输入的麻烦。
 ```
 "scripts": {
-	"start": "webpack-dev-server",
-	"build": "webpack"
+  "start": "webpack-dev-server",
+  "build": "webpack"
 }
 ```
 注意，如果你没有全局安装webpack或者webpack-dev-server，需要把引用的本地路径写明
 ```
 "scripts": {
-	"start": "node_modules/.bin/webpack-dev-server",
-	"build": "node_modules/.bin/webpack"
+  "start": "node_modules/.bin/webpack-dev-server",
+  "build": "node_modules/.bin/webpack"
 }
 ```
  如果要给npm命令里面的webpack命令加参数，需要在参数之前添加`--`，e.g.   
