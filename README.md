@@ -9,6 +9,10 @@
 * Lesson 1: [《一个最简单的webpack应用》](https://github.com/kingvid-chan/webpack-lessons/tree/master/lesson1)
 * Lesson 2: [《使用webpack-dev-server实现热更新》](https://github.com/kingvid-chan/webpack-lessons/tree/master/lesson2)
 * Lesson 3: [《兼容开发和生产环境的配置文件》](https://github.com/kingvid-chan/webpack-lessons/tree/master/lesson3)
+* Lesson 4: [《webpack最适合的应用场景：SPA单页面应用（VUE+SASS+ES6）》](https://github.com/kingvid-chan/webpack-lessons/tree/master/lesson4)
+* Lesson 5: [《在Node中调用webpack》](https://github.com/kingvid-chan/webpack-lessons/tree/master/lesson5)
+* Lesson 6: [《写出自己的loader》](https://github.com/kingvid-chan/webpack-lessons/tree/master/lesson6)
+* Lesson 7: [《写出自己的plugin》](https://github.com/kingvid-chan/webpack-lessons/tree/master/lesson7)
 
 ## 计划
 
