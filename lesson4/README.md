@@ -17,7 +17,6 @@
 8、CommonsChunkPlugin：合并公共代码
 
 ## 课程内容
-在上一节中，我们把第三方库jquery也打包进了webpack.bundle.js文件中，但这样是不合理的，浏览器有缓存机制，
 新建一个lesson4文件，做初始化
 ```
 mkdir lesson4 && cd lesson4
@@ -266,6 +265,25 @@ require.context(directory, useSubdirectories = false, regExp = /^\.\//)
 ```
 运行`npm run build`，本地打开index.html，效果如下：  
 <img src="./img/lesson4.gif" width="600">  
+
+###补充
+
+上面提到的require.context()会把在主目录下所有符合条件的文件路径都返回出来，如果要直接在require中使用变量表达式动态引入模块的话，要注意引入格式，先看个例子：  
+```js
+var name = './src/base.scss';
+require(name);
+```
+在webpack.entry.js中写入以上代码的话，解析会报错且require不到base.scss，如果这样写
+```js
+var name = 'base';
+require('./src/'+name+'.scss');
+```
+就能成功require到base.scss文件，这是因为webpack在解析require函数调用时会抽取两个信息：  
+```
+Directory（指定目录）: ./src
+Regular expression（检索条件）: /^.*\.scss$/
+```
+只有成功拿到这两个信息之后，webpack才会在指定目录下寻找符合条件的文件。
 
 ## 总结
 
