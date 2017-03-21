@@ -4,7 +4,7 @@ var path = require('path'),
     ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
-    entry: [
+    entry: process.env.NODE_ENV === 'production' ? './webpack.entry.js' : [
         'webpack-dev-server/client?http://localhost:8080',
         'webpack/hot/only-dev-server',
         './webpack.entry.js'
@@ -31,7 +31,16 @@ module.exports = {
             ]
         }]
     },
-    plugins: [
+    plugins: process.env.NODE_ENV === 'production' ? [
+        new HtmlWebpackPlugin({
+            template: './src/index.html',
+            filename: 'index.html'
+        }),
+        new ExtractTextPlugin("style.css"),
+        new webpack.DefinePlugin({
+            'NODE_ENV': JSON.stringify(process.env.NODE_ENV)  
+        })
+    ] : [
         new HtmlWebpackPlugin({
             template: './src/index.html',
             filename: 'index.html'

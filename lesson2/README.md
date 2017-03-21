@@ -89,12 +89,12 @@ module.exports = {
   
 运行`npm  start`命令，浏览器访问`http://localhost:8080/index.html`，页面显示正常。修改并保存style.css，发现浏览器并没有自动刷新页面，问题来了！  
 打开浏览器控制台，能看到每次修改保存style.css的时候，webpack-dev-server都能监控到代码变化。  
-<img src="./1.jpeg" width="600">  
+<img src="./img/1.jpeg" width="600">  
 
 ### 问题元凶：extract-text-webpack-plugin
 
 extract-text-webpack-plugin不支持热更新，当使用extract-text-webpack-plugin时样式就没法热加载，这个问题在它的github主页上有提到  
-<img src="./2.png" width="600">  
+<img src="./img/2.png" width="600">  
 那为什么浏览器能监听到style.css的变动呢，那是因为咱们在入口文件webpack.entry.js中写入了`require('./src/style.css')`，webpack会对require的文件保持监听。为了解决问题，咱们尝试一下不用extract-text-webpack-plugin，只用style-loader和css-loader  
 copy以下代码到webpack.config.js
 ```js
@@ -171,12 +171,12 @@ require('./src/main.js');
 ```
 重新运行`npm start`命令，修改保存index.html，页面自动刷新，完美～～～  
 至此，咱们已经可以随意修改html、css、js、图片等文件并实现页面自动热更新了。 
-<img src="./lesson2.gif" width="900">  
+<img src="./img/lesson2.gif" width="900">  
 
 ### devtool
 
 在做样式调整时，比如说要修改项目中图片的大小，在浏览器选中图片，能看到样式都在`<head>`中的`<style>`标签中    
-<img src="./3.png" width="400">  
+<img src="./img/3.png" width="400">  
 当页面某个部分样式要调整时，由于不知道对应样式的具体位置，会增加修改的时间成本。webpack有个属性能把样式都索引到对应的css文件里面，这个属性就是 devtool，特别当页面很复杂，多个模块引入多个css文件时，devtool能大大提高咱们的调试效率，不止是锦上添花，更是雪中送炭啊～  
 copy以下代码到webpack.config.js
 ```js
@@ -247,7 +247,7 @@ module.exports = {
 1、配置了devtool属性  
 2、在module属性 --> rules --> css-loader 添加了sourceMap参数  
 重新运行`npm start`命令，能看到样式映射的目标已经达到了  
-<img src="./4.png" width="400">  
+<img src="./img/4.png" width="400">  
 
 #### 补充
 
@@ -259,8 +259,14 @@ devtool属性值还有其他选项可供选择，差别表现在打包耗时、s
 1、在lesson1有提到，不使用extract-text-webpack-plugin时style.css会被打包进webpack.bundle.js里面；  
 2、在入口文件`require('index.html')`会导致webpack打包时把index.html打包到 webpack.bundle.js 中，而咱们已经使用 html-webpack-plugin 以 index.html 为模版生成了html文件，这样会造成资源重复。  
 咱们来试试，运行`npm run build`命令，打包完成之后目录结构如下：  
-<img src="./5.png" width="200">  
+<img src="./img/5.png" width="200">  
 会发现没有style.css生成，搜索webpack.bundle.js，能看到style.css和index.html的代码  
-<img src="./6.png" width="900">  
-<img src="./7.png" width="900">  
-这个问题咱们一起在下一节lesson3解决。
+<img src="./img/6.png" width="900">  
+<img src="./img/7.png" width="900">  
+3、打包后的webpack.bundle.js文件非常大，近700kb，就算是1、2点中提到的把index.html和style.css一起打包进去，也不可能这么大  
+<img src="./img/8.png" width="400">  
+本地打开index.html，看到控制台有报错信息  
+<img src="./img/9.png" width="400">  
+报错信息看起来很熟悉，跟开发时热更新的提示信息是类似的， 在webpack.bundle.js中检索`webpack-dev-server`，能看到对应打包后的代码  
+<img src="./img/10.png" width="900">  
+这几个问题咱们一起在下一节lesson3解决。

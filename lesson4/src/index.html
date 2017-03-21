@@ -1,0 +1,21 @@
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>webpack-lesson4</title>
+</head>
+<body>
+	<header>
+		<!-- html-loader：用于引入对应资源  -->
+		${require('./components/header/header.html')}
+	</header>
+	<section>
+		${require('./components/body/body.html')}
+	</section>
+	<footer>
+		${require('./components/footer/footer.html')}
+	</footer>
+
+	<!-- 跟webpack.config.js中的externals属性结合，作用包括：1、打包时会忽略jquery文件；2、可全局调用jquery -->
+	<script type="text/javascript" src="http://cdn.bootcss.com/jquery/3.2.0/jquery.min.js"></script>
+</body>
+</html>

@@ -2,7 +2,7 @@
 
 ## 目标
 建立一个lesson1项目，在项目中创建html、css、js、图片等静态文件，编写webpack配置文件，最后生成如下页面：   
-<img src="https://raw.githubusercontent.com/kingvid-chan/webpack-lessons/master/lesson1/demo.png" width="400" height="400">
+<img src="./img/demo.png" width="400" height="400">
   
 要求：  
 1、使用require引入jquery，且页面中要使用jquery来操作DOM，另外html文件要引用js、css、图片文件；  
@@ -66,7 +66,7 @@ var $ = require('jquery');
 $("body").append('<h2>This is created by jquery!</h2>');
 ```
 在img文件夹里面放入一张图片，比如说1.jpg  
-<img src="https://raw.githubusercontent.com/kingvid-chan/webpack-lessons/master/lesson1/1.jpg" width="200" height="200">
+<img src="./img/1.jpg" width="200" height="200">
 
 
 ### 编写配置文件
@@ -113,7 +113,7 @@ require('./src/style.css');
 require('./src/main.js');
 ```
 以上配置了webpack打包的入口文件和输出路径，以及在入口文件中引入了静态资源。但如果现在运行`npm run build`，命令行会报错，显示css和html文件解析错误：
-<img src="./error.jpeg" width="600" height="300">
+<img src="./img/error.jpeg" width="600" height="300">
 
 ### 配置loader
 
@@ -189,9 +189,9 @@ module.exports = {
 };
 ```
 运行`npm run build`命令之后，显示成功打包，build文件夹目录结构如下：  
-<img src="./2.jpeg">  
+<img src="./img/2.jpeg">  
 会发现html和css都被打包进了webpack.bundle.js文件里面，下面是webpack.bundle.js中html部分截图：  
-<img src="./3.jpeg">  
+<img src="./img/3.jpeg">  
 
 ### 配置plugins 
 为了解决上面的问题，我们可以使用html-webpack-plugin（ https://github.com/jantimon/html-webpack-plugin ）和extract-text-webpack-plugin（ https://github.com/webpack-contrib/extract-text-webpack-plugin ）来将html、css代码片段从webpack.bundle.js中抽取出来并生成相应的html（或css）文件，extract-text-webpack-plugin会自动在生成的html文件中插入`<link>`标签引入css
@@ -274,9 +274,9 @@ require('./src/style.css');
 require('./src/main.js');
 ```
 运行`npm run build`命令，显示打包成功，build目录结构如下：  
-<img src="./4.jpeg">  
+<img src="./img/4.jpeg">  
 成功生成独立的html和css文件，本地打开index.html，页面显示一切正常且无报错。  
-<img src="./good-job.jpeg" width="130" height="150">棒棒哒～～～  
+<img src="./img/good-job.jpeg" width="130" height="150">棒棒哒～～～  
 
 ## 补充知识
 

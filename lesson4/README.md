@@ -1,34 +1,127 @@
-# 《webpack最适合的应用场景：SPA单页面应用（VUE+SASS+ES6）》
+# 《晋级篇：SPA单页面应用（组件化开发+SASS+ES6）》
 
 ## 目标
-建立一个lesson4项目，
+建立一个lesson4项目，基于sass编写css、基于ES6语法规则编写js代码实现组件化开发。
+
+## 挑战
+在原项目基础上把html语言改成vue或react，进行组件化开发。
 
 ## 知识点
-1、process.env.NODE_ENV：node运行环境变量。  
+1、sass：用sass代替编写css；  
+2、ES6语法：ES6新增了很多有趣的特性；  
+3、externals：打包时忽略第三方库，比如说jquery；  
+4、resolve属性：改变模块的处理方式；  
+5、UglifyJsPlugin：webpack自带插件，可以对打包js文件进行压缩或美化处理；  
+6、BannerPlugin：给打包文件头部加上你的签名；    
+7、open-browser-webpack-plugin：自动打开浏览器插件；  
+8、CommonsChunkPlugin：合并公共代码
 
 ## 课程内容
-process.env.NODE_ENV是node运行时的全局变量，node服务端中的任一js文件中都可以拿到它的值，先来试试是否真的能获取到值  
-先新建一个lesson3的项目，再创建一个test.js文件
+在上一节中，我们把第三方库jquery也打包进了webpack.bundle.js文件中，但这样是不合理的，浏览器有缓存机制，
+新建一个lesson4文件，做初始化
 ```
-mkdir lesson3 && cd lesson3
-touch test.js
-```
-copy以下代码到test.js
-```js
-console.log(process.env.NODE_ENV);
-```
-在命令行输入
-```
-# 以下是非window系统的命令，如果你当前的系统是window，请使用命令`SET NODE_ENV=development&& node test.js`，否则命令行会返回`undefined`结果
-export NODE_ENV=development&& node test.js
-```
-输出结果是`development`，棒！  
-上一节lesson2遗留下来的问题是使用了开发模式后（webpack-dev-server），webpack打包时会把html和css文件打包到webpack.bundle.js文件中，而在lesson1的生产模式中我们的确成功打包出理想状态的文件。思考一下，咱们是不是可以这么操作，通过获取NODE_ENV的值，判断当前命令的环境是开发还是生产环境，如果是生产环境，咱们就使用extract-text-webpack-plugin抽取css代码块以及删除webpack.entry.js中的`require('index.html')`，否则，相反。  
-okay，npm初始化下、安装各个npm包
-```
+mkdir lesson4 && cd lesson4
 npm init -y
 npm install webpack webpack-dev-server css-loader extract-text-webpack-plugin file-loader html-loader html-webpack-plugin style-loader url-loader --save-dev
-npm install jquery --save
+touch webpack.config.js webpack.entry.js
+mkdir src && cd src
+touch index.html 
+mkdir components && cd components
+mkdir header body footer
+touch header/header.html header/header.scss header/header.js body/body.html body/body.scss body/body.js footer/footer.html footer/footer.scss footer/footer.js
+```
+初始化完之后对应开发文件目录结构如下：  
+<img src="./img/1.png" width="200">  
+copy以下代码到index.html
+```html
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>webpack-lesson4</title>
+</head>
+<body>
+    <header>
+        <!-- html-loader：用于引入对应资源  -->
+        ${require('./components/header/header.html')}
+    </header>
+    <section>
+        ${require('./components/body/body.html')}
+    </section>
+    <footer>
+        ${require('./components/footer/footer.html')}
+    </footer>
+
+    <!-- 跟webpack.config.js中的externals属性结合，作用包括：1、打包时会忽略jquery文件；2、可全局调用jquery -->
+    <script type="text/javascript" src="http://cdn.bootcss.com/jquery/3.2.0/jquery.min.js"></script>
+</body>
+</html>
+```
+copy以下代码到header.html
+```html
+<h1 class="header-title">this is header</h1>
+```
+copy以下代码到body.html
+```html
+<h1 class="body-title">this is body</h1>
+<ul class="body-list">
+    <li class="body-list-item" id="body-input">你可以使用BannerPlugin给你的每个打包文件加上你的签名<br>webpack教程<br>by kingvid</li>
+</ul>
+```
+copy以下代码到footer.html
+```html
+<h1 class="footer-title">this is footer</h1>
+```
+copy以下代码到header.scss
+```css
+.header-title{
+    font-style: italic;
+    background-color: rgba(100,100,100,0.9);
+    color: #fff;
+}
+```
+copy以下代码到body.scss
+```css
+.body-title{
+    border-radius: 4px;
+    border: solid 1px #ccc; 
+    color: #fff;
+    background-color: rgba(0,0,0,0.9);
+}
+.body-list{
+    margin: auto;
+    list-style: none;
+
+    .body-list-item{
+        font-size: 20px;
+    }
+}
+```
+copy以下代码到footer.scss
+```css
+.footer-title{
+    color: #fff;
+    background-color: rgba(200,200,200,0.9);
+}
+```
+copy以下代码到body.js
+```js
+// 这里不再需要再import或require jquery，在webpack.config.js中新增了externals属性，让jquery可以在webpack整个运行环境中被调用
+let element = $("#body-input"),
+    str = element.html(),
+    progress = 0,
+    timer = setInterval(function() {
+        let current = str.substr(progress, 1);
+        if (current == '<') {
+            progress = str.indexOf('>', progress) + 1;
+        } else {
+            progress++;
+        }
+        element.html(str.substring(0, progress) + (progress && 1 ? '_' : ''));
+        if (progress >= str.length) {
+            clearInterval(timer);
+            element.html(str.substring(0, progress));
+        }
+    }, 150);
 ```
 配置package.json命令行
 ```
@@ -37,15 +130,24 @@ npm install jquery --save
   "build": "export NODE_ENV=production  && node_modules/.bin/webpack"
 }
 ```
+[sass-loader](https://github.com/webpack-contrib/sass-loader)用来解析scss文件，它的安装依赖于`node-sass`
+```
+npm install sass-loader node-sass --save-dev
+```
+[babel-loader](https://github.com/babel/babel-loader)可以将ES6语法转化成能被浏览器识别的ES5，开发js我们就能使用最新的ES6语法了
+```
+npm install --save-dev babel-loader babel-core babel-preset-env
+```
 copy以下代码到webpack.config.js
 ```js
 var path = require('path'),
     HtmlWebpackPlugin = require('html-webpack-plugin'),
     webpack = require('webpack'),
-    ExtractTextPlugin = require("extract-text-webpack-plugin");
+    ExtractTextPlugin = require("extract-text-webpack-plugin"),
+    OpenBrowserPlugin = require('open-browser-webpack-plugin');
 
 module.exports = {
-    entry: [
+    entry: process.env.NODE_ENV === 'production' ? './webpack.entry' : [
         'webpack-dev-server/client?http://localhost:8080',
         'webpack/hot/only-dev-server',
         './webpack.entry.js'
@@ -58,8 +160,8 @@ module.exports = {
     context: __dirname,
     module: {
         rules: [{
-            test: /\.css$/,
-            use: process.env.NODE_ENV === 'production' ? ExtractTextPlugin.extract({ fallback: "style-loader", use: "css-loader" }) : ['style-loader', 'css-loader?sourceMap']
+            test: /\.scss$/, // 解析scss文件
+            use: process.env.NODE_ENV === 'production' ? ExtractTextPlugin.extract({ fallback: "style-loader", use: ["css-loader", "sass-loader"] }) : ['style-loader', 'css-loader?sourceMap', 'sass-loader?sourceMap']
         }, {
             test: /\.(jpg|png)$/,
             use: [
@@ -67,12 +169,42 @@ module.exports = {
             ]
         }, {
             test: /\.html$/,
-            use: [
-                'html-loader'
-            ]
+            use: {
+                loader: 'html-loader',
+                options: {
+                    interpolate: 'require'
+                }
+            }
+        }, {
+            test: /\.js$/,
+            exclude: /node_modules/,
+            use: {
+                loader: 'babel-loader',
+                options: {
+                    presets: ['env']
+                }
+            }
         }]
     },
-    plugins: [
+    plugins: process.env.NODE_ENV === 'production' ? [
+        new HtmlWebpackPlugin({
+            template: './src/index.html',
+            filename: 'index.html'
+        }),
+        new ExtractTextPlugin("style.css"),
+
+        // 压缩js文件
+        new webpack.optimize.UglifyJsPlugin({
+            compress: {
+                warnings: true
+            }
+        }),
+
+        // 给打包文件加上你的签名
+        new webpack.BannerPlugin({
+            banner: 'This is created by kingvid'
+        })
+    ] : [
         new HtmlWebpackPlugin({
             template: './src/index.html',
             filename: 'index.html'
@@ -80,37 +212,62 @@ module.exports = {
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NamedModulesPlugin(),
         new ExtractTextPlugin("style.css"),
-        new webpack.DefinePlugin({
-            'NODE_ENV': JSON.stringify(process.env.NODE_ENV)  // 直接传字符串的话webpack会把它当作代码片段来编译，这里用JSON.stringify()做字符串化处理
-        })
+        new OpenBrowserPlugin({ url: 'http://localhost:8080/' }) // 自动在浏览器中打开 http://localhost:8080/
     ],
     devServer: {
         contentBase: path.resolve(__dirname, 'src'),
         hot: true,
         noInfo: false
     },
-    devtool: 'source-map'
+    devtool: 'source-map',
+
+    // 打包时将不会把以下第三方库打包进webpack.bundle.js中但可被webpack全局调用，比如说jquery，但需要在html文件中用script引入jquery
+    externals: {
+        jquery: 'jQuery'
+    },
+
+    // 改变模块的处理方式
+    resolve: {
+        extensions: ['.js', '.scss', '.html'], // eg：入口文件改成webpack.entry，打包时webpack会先检索webpack.entry文件，返回结果为空时给文件补上.js文件尾缀再继续检索，依此类推。
+        alias: {
+            // 这里可以给一些常用的模块添加别名，可以减少webpack查找该模块的时间，比如说：vue
+            // 'vue': 'vue/dist/vue.common.js'
+        }
+    }
 };
 ```
-相比于上一届lesson2的webpack.config.js，修改的地方有3个：  
-1、引入了extract-text-webpack-plugin：`require("extract-text-webpack-plugin")`；  
-2、在module属性 --> rules --> css中，添加了对NODE_ENV的判断；  
-3、在plugins属性中增添了`new ExtractTextPlugin("style.css")`以及`webapck.DefinePlugin()`，用webapck.DefinePlugin可以把process.env.NODE_ENV暴露给webpack整个编译的过程，也就是让webpack.entry.js也能获取到process.env.NODE_ENV的值（webpack.entry.js运行在浏览器端，并不能直接获取到process.env.NODE_ENV）  
-  
+修改的地方主要有：  
+1、修改loader：sass和babel；  
+2、在plugins新增UglifyJsPlugin插件，打包时会对js文件做压缩；  
+3、OpenBrowserPlugin：运行`npm start`命令会自动打开浏览器窗口；  
+4、新增resolve属性：给文件自动添加尾缀、减少webpack查找常用模块的时间；   
+5、新增externals属性：引入且不打包第三方库；   
+6、在plugins新增BannerPlugin插件，运行`npm run build`，打开webpack.bundle.js可看到  
+<img src="./img/2.png" width="600">  
+
 copy以下代码到webpack.entry.js
 ```js
-if (NODE_ENV === 'development') {
-    require('./src/index.html');
-}
-require('./src/style.css');
-require('./src/main.js');
+let context = require.context('./src', true, /\.(js|scss)$/i);
+
+console.log(context.keys());
+// 结果是：["./base.scss","./components/body/body.js","./components/body/body.scss","./components/footer/footer.js","./components/footer/footer.scss","./components/header/header.js","./components/header/header.scss"]
+// context('./base.scss') 相当于 require("./src/base.scss");
+context.keys().forEach(function(key){
+    context(key);
+});
 ```
-最后将上一节lesson2中的`src`开发目录复制到lesson3中，命令行运行`npm start`，修改html、css等文件时，浏览器自动刷新，一切符合预期，棒！  
-退出执行`npm run build`，打包完目录结构如下：（.map是sourceMap文件）  
-<img src="./1.png" width="200">  
-正常生成index.html和style.css，在webpack.bundle.js中也没有重复打包html和css，本地打开index.html时，页面显示正常，棒！  
+`require.context`的作用是可以把在自己设置的目录下所有符合条件的文件一次性require到webpack运行环境中，它有三个参数：  
+```
+require.context(directory, useSubdirectories = false, regExp = /^\.\//)
+# 它会返回一个webpackContext的函数结果，通过调用返回对象的.keys()方法可以获取检索结果
+# directory：设定在哪个目录下检索文件，必须是相对路径
+# useSubdirectories：是否在当前目录下的所有子目录进行检索，而不限制只在directory当前目录下检索
+# regExp：正则表达式，即检索条件，webpack.entry.js检索条件是所有文件名以.js或.scss结尾的文件，且不区分大小写
+```
+运行`npm run build`，本地打开index.html，效果如下：  
+<img src="./img/lesson4.gif" width="600">  
 
 ## 总结
 
-其实上面这种解决方案是比较复杂的，还有另外一种方式就是把生产环境和开发环境的配置文件分开写并保存到两个文件中，但对于我这种有代码洁癖的人来说，我接受不了。🌝🌖🌗🌘🌚
+对于第三方库的引入，上面的externals需要在html中手动引入jquery，可能有些人会觉得麻烦，其实还有另外一种解决方案，这里就要用到webpack强大的`code splitting`，即代码分割。见下一节lesson5
 
