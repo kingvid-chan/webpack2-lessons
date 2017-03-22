@@ -1,4 +1,4 @@
-# 在Node中调用webpack+反向代理
+# 在Node.js中调用webpack+反向代理
 
 ## 目标
 1、不使用命令行，由Node调用webpack执行打包操作；   
