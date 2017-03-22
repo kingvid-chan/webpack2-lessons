@@ -10,9 +10,10 @@
 * Lesson 2: [《使用webpack-dev-server实现热更新》](https://github.com/kingvid-chan/webpack-lessons/tree/master/lesson2)
 * Lesson 3: [《兼容开发和生产环境的配置文件》](https://github.com/kingvid-chan/webpack-lessons/tree/master/lesson3)
 * Lesson 4: [《晋级篇：SPA单页面应用（组件化开发+SASS+ES6）》](https://github.com/kingvid-chan/webpack-lessons/tree/master/lesson4)
-* Lesson 5: [《在Node中调用webpack》](https://github.com/kingvid-chan/webpack-lessons/tree/master/lesson5)
-* Lesson 6: [《写出自己的loader》](https://github.com/kingvid-chan/webpack-lessons/tree/master/lesson6)
-* Lesson 7: [《写出自己的plugin》](https://github.com/kingvid-chan/webpack-lessons/tree/master/lesson7)
+* Lesson 5: [《晋级篇（续）：复杂项目下的代码分割》](https://github.com/kingvid-chan/webpack-lessons/tree/master/lesson5)
+* Lesson 6: [《在Node中调用webpack+反向代理》](https://github.com/kingvid-chan/webpack-lessons/tree/master/lesson6)
+* Lesson 7: [《写出自己的loader》](https://github.com/kingvid-chan/webpack-lessons/tree/master/lesson7)
+* Lesson 8: [《写出自己的plugin》](https://github.com/kingvid-chan/webpack-lessons/tree/master/lesson8)
 
 ## 计划
 
