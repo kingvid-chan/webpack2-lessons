@@ -1,5 +1,5 @@
 # 《一个最简单的webpack应用》
-
+ 
 ## 目标
 建立一个lesson1项目，在项目中创建html、css、js、图片等静态文件，编写webpack配置文件，最后生成如下页面：   
 <img src="./img/demo.png" width="400" height="400">
