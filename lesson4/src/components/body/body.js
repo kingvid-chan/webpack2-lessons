@@ -2,7 +2,7 @@
 let element = $("#body-input"),
 	str = element.html(),
 	progress = 0,
-	timer = setInterval(function() {
+	timer = setInterval(() => {
 	    let current = str.substr(progress, 1);
 	    if (current == '<') {
 	        progress = str.indexOf('>', progress) + 1;

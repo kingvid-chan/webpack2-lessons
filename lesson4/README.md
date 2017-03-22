@@ -14,7 +14,6 @@
 5、UglifyJsPlugin：webpack自带插件，可以对打包js文件进行压缩或美化处理；  
 6、BannerPlugin：给打包文件头部加上你的签名；    
 7、open-browser-webpack-plugin：自动打开浏览器插件；  
-8、CommonsChunkPlugin：合并公共代码
 
 ## 课程内容
 新建一个lesson4文件，做初始化
@@ -108,7 +107,7 @@ copy以下代码到body.js
 let element = $("#body-input"),
     str = element.html(),
     progress = 0,
-    timer = setInterval(function() {
+    timer = setInterval(() => {
         let current = str.substr(progress, 1);
         if (current == '<') {
             progress = str.indexOf('>', progress) + 1;
@@ -191,7 +190,9 @@ module.exports = {
             filename: 'index.html'
         }),
         new ExtractTextPlugin("style.css"),
-
+        new webpack.DefinePlugin({
+            'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+        }),
         // 压缩js文件
         new webpack.optimize.UglifyJsPlugin({
             compress: {
@@ -210,7 +211,9 @@ module.exports = {
         }),
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NamedModulesPlugin(),
-        new ExtractTextPlugin("style.css"),
+        new webpack.DefinePlugin({
+            'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+        }),
         new OpenBrowserPlugin({ url: 'http://localhost:8080/' }) // 自动在浏览器中打开 http://localhost:8080/
     ],
     devServer: {
@@ -246,14 +249,21 @@ module.exports = {
 
 copy以下代码到webpack.entry.js
 ```js
-let context = require.context('./src', true, /\.(js|scss)$/i);
+const cssAndJsContext = require.context('./src', true, /\.(js|scss)$/i);
 
-console.log(context.keys());
+console.log(cssAndJsContext.keys());
 // 结果是：["./base.scss","./components/body/body.js","./components/body/body.scss","./components/footer/footer.js","./components/footer/footer.scss","./components/header/header.js","./components/header/header.scss"]
-// context('./base.scss') 相当于 require("./src/base.scss");
-context.keys().forEach(function(key){
-    context(key);
+// cssAndJsContext('./base.scss') 相当于 require("./src/base.scss");
+cssAndJsContext.keys().forEach((key) => {
+    cssAndJsContext(key);
 });
+
+if (NODE_ENV === 'development') {
+    const htmlContext = require.context('./src', true, /\.html$/i);
+    htmlContext.keys().forEach((key) => {
+        htmlContext(key);
+    });
+}
 ```
 `require.context`的作用是可以把在自己设置的目录下所有符合条件的文件一次性require到webpack运行环境中，它有三个参数：  
 ```
@@ -266,7 +276,7 @@ require.context(directory, useSubdirectories = false, regExp = /^\.\//)
 运行`npm run build`，本地打开index.html，效果如下：  
 <img src="./img/lesson4.gif" width="600">  
 
-###补充
+### 补充
 
 上面提到的require.context()会把在主目录下所有符合条件的文件路径都返回出来，如果要直接在require中使用变量表达式动态引入模块的话，要注意引入格式，先看个例子：  
 ```js
@@ -287,5 +297,5 @@ Regular expression（检索条件）: /^.*\.scss$/
 
 ## 总结
 
-对于第三方库的引入，上面的externals需要在html中手动引入jquery，可能有些人会觉得麻烦，其实还有另外一种解决方案，这里就要用到webpack强大的`code splitting`，即代码分割。见下一节lesson5
+对于第三方库的引入，上面的externals需要在html中手动引入jquery，可能有些人会觉得麻烦，其实还有另外一种解决方案，这里就要用到webpack强大的也更为复杂的`code splitting`，即代码分割。见下一节lesson5
 

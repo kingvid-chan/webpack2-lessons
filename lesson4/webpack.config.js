@@ -50,7 +50,9 @@ module.exports = {
             filename: 'index.html'
         }),
         new ExtractTextPlugin("style.css"),
-
+        new webpack.DefinePlugin({
+            'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+        }),
         // 压缩js文件
         new webpack.optimize.UglifyJsPlugin({
             compress: {
@@ -69,7 +71,9 @@ module.exports = {
         }),
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NamedModulesPlugin(),
-        new ExtractTextPlugin("style.css"),
+        new webpack.DefinePlugin({
+            'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+        }),
         new OpenBrowserPlugin({ url: 'http://localhost:8080/' }) // 自动在浏览器中打开 http://localhost:8080/
     ],
     devServer: {
