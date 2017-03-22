@@ -1,6 +1,6 @@
 # 《使用webpack-dev-server实现热更新》
 
-## 目标
+## 目标 
 建立一个lesson2项目，内容与上一节的lesson1项目一致，当用浏览器访问`http://localhost:8080/index.html`时，修改任一html、css、js、图片文件，页面都会自动刷新。  
 
 ## 挑战
