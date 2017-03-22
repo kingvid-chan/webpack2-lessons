@@ -1,0 +1,14 @@
+.body-title{
+	border-radius: 4px;
+	border: solid 1px #ccc; 
+	color: #fff;
+	background-color: rgba(0,0,0,0.9);
+}
+.body-list{
+	margin: auto;
+	list-style: none;
+
+	.body-list-item{
+		font-size: 20px;
+	}
+}
