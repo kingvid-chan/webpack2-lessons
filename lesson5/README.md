@@ -1,9 +1,17 @@
 # 《晋级篇（续）：复杂项目下的代码分割》
 
+## 目标
 咱们在lesson4的基础上接着讲，这一节要解决两个问题：  
 1、第三方库的引入；  
-2、复杂项目下的按需加载。  
-  
+2、复杂项目下的按需加载。
+
+## 知识点
+1、使用extract-text-webpack-plugin打包多个css文件；  
+2、CommonsChunkPlugin：抽取公共模块；  
+3、ProvidePlugin：全局调用某模块；  
+4、require.ensure()：按需加载模块。  
+
+## 课程内容  
 咱们还是以lesson4的demo为准，把lesson4的src开发目录复制到lesson5下，这一次咱们把项目搞得相对复杂一些，虽说现在比较成熟的前端团队都会有自己的ui库，为了方便咱们还是从成熟的bootstrap和font-awesome来切入，需要注意的是要处理好jquery和bootstrap的依赖关系。  
 首先把index.html中的
 ```
@@ -334,10 +342,14 @@ var element = $("#body-input"),
 
 require('../../public/a.js'); // 这里会立即执行，会被打包到bundle.js文件中
 $("#body-btn").click(() => {
+    // require.ensure(dependencies: String[], callback: function(require), chunkName: String)
+    // dependencies：在执行之前加载完模块依赖
+    // callback：模块依赖加载完全之后执行该回调函数，require函数传入该回调函数中，供函数内部调用
+    // chunkName：webpack打包该模块时的生成的文件命名，当有多个require.ensure()使用相同的chunkname时，webpack会把它们统一打包到一个文件中，如果chunkName为空，传回模块id
     require.ensure(['../../public/b.js'], function(require){
         require('../../public/c.js');
         // 注意b.js在这里是不会被执行的，它只是被加载了，如果要调用的话，需要执行`require('../../public/b.js')`
-    });
+    }, 'bc');
 });
 ```
 运行`npm start`，效果如下：  
