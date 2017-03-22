@@ -1,7 +1,7 @@
 # 在Node.js中调用webpack+反向代理
 
 ## 目标
-1、不使用命令行，由Node调用webpack执行打包操作；   
+1、不使用命令行，由Node.js调用webpack执行打包操作；   
 2、开启webpack-dev-server代理，并实现数据反向代理。    
 
 ## 知识点
