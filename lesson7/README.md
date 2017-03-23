@@ -26,7 +26,7 @@
 1、同步回调时，可以执行this.callback()，默认第一个参数是err错误信息（不报错时返回null），第二个参数是解析完模块后的返回结果，第三个参数是sourceMap（可选），在链式调用时可将sourceMap传给下一个loader；  
 2、异步回调时，可以执行this.async()，参数同上；  
 3、this.addDependency(filePath)可以把对应filePath的文件添加到webpack的依赖树，webpack可以监测它的文件变动并刷新（filePath要是绝对路径）；
-4、this.resolve()可以解析处理文件路径；  
+4、this.resolve()可以解析处理文件路径；     
 5、this.query：获取loader的配置选项。
 
 ### loader-utils方法
@@ -187,4 +187,5 @@ webpack.config.js需要修改下html文件的loader配置
 注意不要给被处理模块中添加绝对路径，当项目被移动到别的位置时，会破坏webpack的hash解析，可以使用`loaderUtils`的`stringifyRequest`函数，它能将绝对路径转化为相对路径；  
 
 # 总结
-npm发布的时候注意是否已有重名npm包导致发布失败，最好能一开始就查询好能用的命名，不用像我一样，为了规范回头还要去把github仓库重命名一次，关于`test-webpack-loader`的详细源码可以查看 https://github.com/kingvid-chan/test-webpack-loader
+npm发布的时候注意是否已有重名npm包导致发布失败，最好能一开始就查询好能用的命名，不用像我一样，为了规范回头还要去把github仓库重命名一次，关于`test-webpack-loader`的详细源码可以查看 https://github.com/kingvid-chan/test-webpack-loader   
+测试时不一定需要把loader发布到npm上，也可以直接把test-webpack-loader文件夹copy到lesson7的node_modules下就能被调用了。
