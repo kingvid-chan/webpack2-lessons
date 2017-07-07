@@ -38,26 +38,26 @@ mkdir img
 copy以下内容到index.html
 ```html
 <html>
-<head>
-    <meta charset="UTF-8">
-    <title>webpack-lesson1</title>
-</head>
-<body>
-    <img src="./img/1.jpg" alt="放弃我的脸">
-    <h1>hello world!!!</h1>
-</body>
+ <head> 
+  <meta charset="UTF-8" /> 
+  <title>webpack-lesson1</title>
+ </head> 
+ <body> 
+  <img src="./img/1.jpg" alt="放弃我的脸" /> 
+  <h1>hello world!!!</h1> 
+ </body>
 </html>
 ```
 copy以下内容到style.css
 ```css
-body{
-    text-align: center;
-    font-size: 16px;
+body {
+  text-align: center;
+  font-size: 16px;
 }
 
-img{
-    width: 500px;
-    height: auto;
+img {
+  width: 500px;
+  height: auto;
 }
 ```
 copy以下内容到main.js
@@ -77,31 +77,30 @@ touch webpack.config.js webpack.entry.js
 copy以下代码到webpack.config.js
 ```js
 //webpack配置文件符合commonJs模块规范
-var path = require('path');  //这里引入path是为了解析相对路径，配置文件某些路径要求是绝对路径
-
+var path = require('path'); //这里引入path是为了解析相对路径，配置文件某些路径要求是绝对路径
 module.exports = {
-	// 入口文件，webpack据此对项目进行打包
-	// 类型： String字符串 | Array数组 | Object对象
-	// lesson1很简单，只使用一个入口
-    entry: './webpack.entry.js',  // webpack的入口文件，后面会创建
+  // 入口文件，webpack据此对项目进行打包
+  // 类型： String字符串 | Array数组 | Object对象
+  // lesson1很简单，只使用一个入口
+  entry: './webpack.entry.js',
+  // webpack的入口文件，后面会创建
+  // 定义webpack打包时的输出文件名及路径
+  output: {
+    // 定义webpack打包之后的文件名
+    filename: 'webpack.bundle.js',
 
-    // 定义webpack打包时的输出文件名及路径
-    output: {
-        // 定义webpack打包之后的文件名
-        filename: 'webpack.bundle.js',
+    // 定义打包文件的存储路径：当前目录的build文件夹
+    path: path.resolve(__dirname, './build'),
 
-        // 定义打包文件的存储路径：当前目录的build文件夹
-        path: path.resolve(__dirname, './build'),
+    // 声明资源（js、css、图片等）的引用路径
+    // webpack打包时会把html页面上的相对路径根据publicPath解析成绝对路径
+    // eg：当publicPath为'https://jd.com/'时，如果有html或者css含有一张图片相对路径为'./img/test.jpg',打包之后html（或css）中图片的路径就会变成'https://jd.com/img/test.jpg'
+    publicPath: ''
+  },
 
-		// 声明资源（js、css、图片等）的引用路径
-        // webpack打包时会把html页面上的相对路径根据publicPath解析成绝对路径
-        // eg：当publicPath为'https://jd.com/'时，如果有html或者css含有一张图片相对路径为'./img/test.jpg',打包之后html（或css）中图片的路径就会变成'https://jd.com/img/test.jpg'
-        publicPath: ''
-    },
-
-    // 用于解析entry选项的基础目录(必须是绝对路径)，该目录必须包含入口文件
-    // 默认: process.cwd()
-    context: __dirname
+  // 用于解析entry选项的基础目录(必须是绝对路径)，该目录必须包含入口文件
+  // 默认: process.cwd()
+  context: __dirname
 };
 ```
 再copy以下代码到webpack.entry.js
@@ -120,17 +119,17 @@ require('./src/main.js');
 出现上图错误的原因是因为咱们还没有在webpack.config.js配置相应的loader来解析html和css的文件类型
 
 #### 解析html文件
-html-loader( https://github.com/webpack-contrib/html-loader )可以用来解析html文件并以字符串string的形式传给webpack，此外可按需对html文件做压缩。
+[html-loader](https://github.com/webpack-contrib/html-loader)可以用来解析html文件并以字符串string的形式传给webpack，此外可按需对html文件做压缩。
 ```
 npm install html-loader --save-dev
 ```
 #### 解析css文件
-css-loader( https://github.com/webpack-contrib/css-loader )能够解析css文件、并把解析后的css以字符串的形式传给style-loader( https://github.com/webpack-contrib/style-loader )，style-loader在html中通过创建< style >标签引入css
+[css-loader](https://github.com/webpack-contrib/css-loader)能够解析css文件、并把解析后的css以字符串的形式传给[style-loader](https://github.com/webpack-contrib/style-loader)，style-loader在html中通过创建< style >标签引入css
 ```
 npm install style-loader css-loader --save-dev
 ```
 #### 解析png和jpg图片文件
-file-loader( https://github.com/webpack-contrib/file-loader )可以用来解析静态图片的引用，url-loader( https://github.com/webpack-contrib/url-loader )是对file-loader的进一步封装，它可以把较小的图片转化成base64，它的使用也依赖于file-loader。
+[file-loader](https://github.com/webpack-contrib/file-loader)可以用来解析静态图片的引用，[url-loader](https://github.com/webpack-contrib/url-loader)是对file-loader的进一步封装，它可以把较小的图片转化成base64，它的使用也依赖于file-loader。
 ```
 npm install file-loader url-loader --save-dev
 ```
@@ -138,54 +137,52 @@ npm install file-loader url-loader --save-dev
 copy以下代码到webpack.config.js
 ```js
 //webpack配置文件符合commonJs模块规范
-var path = require('path');  //这里引入path是为了解析相对路径，配置文件某些路径要求是绝对路径
-
+var path = require('path'); //这里引入path是为了解析相对路径，配置文件某些路径要求是绝对路径
 module.exports = {
-    // 入口文件，webpack据此对项目进行打包
-    // 类型： String字符串 | Array数组 | Object对象
-    // lesson1很简单，只使用一个入口
-    entry: './webpack.entry.js',  // webpack的入口文件，后面会创建
+  // 入口文件，webpack据此对项目进行打包
+  // 类型： String字符串 | Array数组 | Object对象
+  // lesson1很简单，只使用一个入口
+  entry: './webpack.entry.js',
+  // webpack的入口文件，后面会创建
+  // 定义webpack打包时的输出文件名及路径
+  output: {
+    // 定义webpack打包之后的文件名
+    filename: 'webpack.bundle.js',
 
-    // 定义webpack打包时的输出文件名及路径
-    output: {
-        // 定义webpack打包之后的文件名
-        filename: 'webpack.bundle.js',
+    // 定义打包文件的存储路径：当前目录的build文件夹
+    path: path.resolve(__dirname, './build'),
 
-        // 定义打包文件的存储路径：当前目录的build文件夹
-        path: path.resolve(__dirname, './build'),
+    // 声明资源（js、css、图片等）的引用路径
+    // webpack打包时会把html页面上的相对路径根据publicPath解析成绝对路径
+    // eg：当publicPath为'https://jd.com/'时，如果有html或者css含有一张图片相对路径为'./img/test.jpg',打包之后html（或css）中图片的路径就会变成'https://jd.com/img/test.jpg'
+    publicPath: ''
+  },
 
-        // 声明资源（js、css、图片等）的引用路径
-        // webpack打包时会把html页面上的相对路径根据publicPath解析成绝对路径
-        // eg：当publicPath为'https://jd.com/'时，如果有html或者css含有一张图片相对路径为'./img/test.jpg',打包之后html（或css）中图片的路径就会变成'https://jd.com/img/test.jpg'
-        publicPath: ''
+  // 用于解析entry选项的基础目录(必须是绝对路径)，该目录必须包含入口文件
+  // 默认: process.cwd()
+  context: __dirname,
+
+  // 定义项目里各种类型模块的处理方式
+  module: {
+    rules: [{
+      test: /\.css$/,
+      // 处理.css文件
+      use: ['style-loader', 'css-loader']
     },
-
-    // 用于解析entry选项的基础目录(必须是绝对路径)，该目录必须包含入口文件
-    // 默认: process.cwd()
-    context: __dirname,
-
-    // 定义项目里各种类型模块的处理方式
-    module: {
-        rules: [{
-            test: /\.css$/, // 处理.css文件
-            use: [
-                'style-loader',
-                'css-loader'
-            ]
-        }, {
-            test: /\.(jpg|png)$/,  // 处理.png和.jpg格式的图片文件
-            use: [
-                'url-loader?limit=10000&name=img/[name].[ext]'
-                // limit参数指图片大小（10kb），当小于这个值时图片转为base64，当把值修改为60000时，1.jpg（50kb）会被解析成base64，打包后查看index.html代码可以看到
-                // name参数指图片文件的命名格式，前面可以加 img/ 表示图片存储路径
-            ]
-        }, {
-            test: /\.html$/,  // 处理.html文件
-            use: [
-                'html-loader'
-            ]
-        }]
-    }
+    {
+      test: /\.(jpg|png)$/,
+      // 处理.png和.jpg格式的图片文件
+      use: ['url-loader?limit=10000&name=img/[name].[ext]'
+      // limit参数指图片大小（10kb），当小于这个值时图片转为base64，当把值修改为60000时，1.jpg（50kb）会被解析成base64，打包后查看index.html代码可以看到
+      // name参数指图片文件的命名格式，前面可以加 img/ 表示图片存储路径
+      ]
+    },
+    {
+      test: /\.html$/,
+      // 处理.html文件
+      use: ['html-loader']
+    }]
+  }
 };
 ```
 运行`npm run build`命令之后，显示成功打包，build文件夹目录结构如下：  
@@ -194,75 +191,77 @@ module.exports = {
 <img src="./img/3.jpeg">  
 
 ### 配置plugins 
-为了解决上面的问题，我们可以使用html-webpack-plugin（ https://github.com/jantimon/html-webpack-plugin ）和extract-text-webpack-plugin（ https://github.com/webpack-contrib/extract-text-webpack-plugin ）来将html、css代码片段从webpack.bundle.js中抽取出来并生成相应的html（或css）文件，extract-text-webpack-plugin会自动在生成的html文件中插入`<link>`标签引入css
+为了解决上面的问题，我们可以使用[html-webpack-plugin](https://github.com/jantimon/html-webpack-plugin)和[extract-text-webpack-plugin](https://github.com/webpack-contrib/extract-text-webpack-plugin)来将html、css代码片段从webpack.bundle.js中抽取出来并生成相应的html（或css）文件，extract-text-webpack-plugin会自动在生成的html文件中插入`<link>`标签引入css
 ```
 npm install html-webpack-plugin extract-text-webpack-plugin --save-dev
 ```
 copy以下代码到webpack.config.js
 ```js
 //webpack配置文件符合commonJs模块规范
-var path = require('path'), //这里引入path是为了解析相对路径，配置文件某些路径要求是绝对路径
-    HtmlWebpackPlugin = require('html-webpack-plugin'), //简化生成适合webpack打包的html
-    ExtractTextPlugin = require("extract-text-webpack-plugin"); //抽取css字符串并生成css文件
-
+var path = require('path'),
+//这里引入path是为了解析相对路径，配置文件某些路径要求是绝对路径
+HtmlWebpackPlugin = require('html-webpack-plugin'),
+//简化生成适合webpack打包的html
+ExtractTextPlugin = require("extract-text-webpack-plugin"); //抽取css字符串并生成css文件
 module.exports = {
-    // 入口文件，webpack据此对项目进行打包
-    // 类型： String字符串 | Array数组 | Object对象
-    // lesson1很简单，只使用一个入口
-    entry: './webpack.entry.js', // webpack的入口文件，后面会创建
+  // 入口文件，webpack据此对项目进行打包
+  // 类型： String字符串 | Array数组 | Object对象
+  // lesson1很简单，只使用一个入口
+  entry: './webpack.entry.js',
+  // webpack的入口文件，后面会创建
+  // 定义webpack打包时的输出文件名及路径
+  output: {
+    // 定义webpack打包之后的文件名
+    filename: 'webpack.bundle.js',
 
-    // 定义webpack打包时的输出文件名及路径
-    output: {
-        // 定义webpack打包之后的文件名
-        filename: 'webpack.bundle.js',
+    // 定义打包文件的存储路径：当前目录的build文件夹
+    path: path.resolve(__dirname, './build'),
 
-        // 定义打包文件的存储路径：当前目录的build文件夹
-        path: path.resolve(__dirname, './build'),
+    // 声明资源（js、css、图片等）的引用路径
+    // webpack打包时会把html页面上的相对路径根据publicPath解析成绝对路径
+    // eg：当publicPath为'https://jd.com/'时，如果有html或者css含有一张图片相对路径为'./img/test.jpg',打包之后html（或css）中图片的路径就会变成'https://jd.com/img/test.jpg'
+    publicPath: ''
+  },
 
-        // 声明资源（js、css、图片等）的引用路径
-        // webpack打包时会把html页面上的相对路径根据publicPath解析成绝对路径
-        // eg：当publicPath为'https://jd.com/'时，如果有html或者css含有一张图片相对路径为'./img/test.jpg',打包之后html（或css）中图片的路径就会变成'https://jd.com/img/test.jpg'
-        publicPath: ''
+  // 用于解析entry选项的基础目录(必须是绝对路径)，该目录必须包含入口文件
+  // 默认: process.cwd()
+  context: __dirname,
+
+  // 定义项目里各种类型模块的处理方式
+  module: {
+    rules: [{
+      test: /\.css$/,
+      // 处理.css文件
+      use: ExtractTextPlugin.extract({
+        fallback: "style-loader",
+        use: "css-loader"
+      })
     },
-
-    // 用于解析entry选项的基础目录(必须是绝对路径)，该目录必须包含入口文件
-    // 默认: process.cwd()
-    context: __dirname,
-
-    // 定义项目里各种类型模块的处理方式
-    module: {
-        rules: [{
-            test: /\.css$/, // 处理.css文件
-            use: ExtractTextPlugin.extract({
-                fallback: "style-loader",
-                use: "css-loader"
-            })
-        }, {
-            test: /\.(jpg|png)$/, // 处理.png和.jpg格式的图片文件
-            use: [
-                'url-loader?limit=10000&name=img/[name].[ext]'
-                // limit参数指图片大小（10kb），当小于这个值时图片转为base64，当把值修改为60000时，1.jpg（50kb）会被解析成base64，打包后查看index.html代码可以看到
-                // name参数指图片文件的命名格式，前面可以加 img/ 表示图片存储路径
-            ]
-        }, {
-            test: /\.html$/, // 处理.html文件
-            use: [
-                'html-loader'
-            ]
-        }]
+    {
+      test: /\.(jpg|png)$/,
+      // 处理.png和.jpg格式的图片文件
+      use: ['url-loader?limit=10000&name=img/[name].[ext]'
+      // limit参数指图片大小（10kb），当小于这个值时图片转为base64，当把值修改为60000时，1.jpg（50kb）会被解析成base64，打包后查看index.html代码可以看到
+      // name参数指图片文件的命名格式，前面可以加 img/ 表示图片存储路径
+      ]
     },
+    {
+      test: /\.html$/,
+      // 处理.html文件
+      use: ['html-loader']
+    }]
+  },
 
-    // webpack插件
-    plugins: [
-        // 生成html文件
-        new HtmlWebpackPlugin({
-            template: './src/index.html',
-            filename: 'index.html'
-        }),
+  // webpack插件
+  plugins: [
+  // 生成html文件
+  new HtmlWebpackPlugin({
+    template: './src/index.html',
+    filename: 'index.html'
+  }),
 
-        // 生成css文件，一下括号中的'style.css' 是打包后的css文件名，可自定义
-        new ExtractTextPlugin("style.css") 
-    ]
+  // 生成css文件，一下括号中的'style.css' 是打包后的css文件名，可自定义
+  new ExtractTextPlugin("style.css")]
 };
 ```
 由于已经使用 html-webpack-plugin 以 index.html 为模版生成了html文件，webpack打包时会引入 index.html ，所以在webpack.entry.js中就没必要再次 `require('index.html')` ，修改完的webpack.entry.js如下：  
