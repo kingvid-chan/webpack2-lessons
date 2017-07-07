@@ -108,9 +108,13 @@ extractStyle = new ExtractTextPlugin('style.css');
 module.exports = (NODE_ENV) = >{
   let config = {
     entry: NODE_ENV === 'production' ? {
-      vendor: ['jquery', 'bootJs'],
-      app: './webpack.entry'
-    }: ['webpack-dev-server/client?http://localhost:8080', 'webpack/hot/only-dev-server', './webpack.entry.js'],
+        vendor: ['jquery', 'bootJs'],
+        app: './webpack.entry'
+      } : [
+        'webpack-dev-server/client?http://localhost:8080', 
+        'webpack/hot/only-dev-server', 
+        './webpack.entry.js'
+    ],
     output: {
       filename: 'bundle.[hash].js',
       path: path.resolve(__dirname, './build'),
@@ -156,33 +160,48 @@ module.exports = (NODE_ENV) = >{
         use: ['file-loader?name=fonts/[name].[ext]']
       }]
     },
-    plugins: NODE_ENV === 'production' ? [new HtmlWebpackPlugin({
-      template: './src/index.html',
-      filename: 'index.html'
-    }), extractVendor, extractStyle, new webpack.DefinePlugin({
-      'NODE_ENV': JSON.stringify(NODE_ENV)
-    }), new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: true
-      }
-    }), new webpack.optimize.CommonsChunkPlugin({
-      name: "vendor",
-      filename: "vendor.js",
-      minChunks: Infinity,
-    }), new webpack.ProvidePlugin({
-      $: 'jquery',
-      jQuery: 'jquery'
-    })] : [new HtmlWebpackPlugin({
-      template: './src/index.html',
-      filename: 'index.html'
-    }), new webpack.HotModuleReplacementPlugin(), new webpack.NamedModulesPlugin(), new webpack.DefinePlugin({
-      'NODE_ENV': JSON.stringify(NODE_ENV)
-    }), new OpenBrowserPlugin({
-      url: 'http://localhost:8080/'
-    }), new webpack.ProvidePlugin({
-      $: 'jquery',
-      jQuery: 'jquery'
-    })],
+    plugins: NODE_ENV === 'production' ? [
+      new HtmlWebpackPlugin({
+        template: './src/index.html',
+        filename: 'index.html'
+      }), 
+      extractVendor, 
+      extractStyle, 
+      new webpack.DefinePlugin({
+        'NODE_ENV': JSON.stringify(NODE_ENV)
+      }), 
+      new webpack.optimize.UglifyJsPlugin({
+        compress: {
+          warnings: true
+        }
+      }), 
+      new webpack.optimize.CommonsChunkPlugin({
+        name: "vendor",
+        filename: "vendor.js",
+        minChunks: Infinity,
+      }), 
+      new webpack.ProvidePlugin({
+        $: 'jquery',
+        jQuery: 'jquery'
+      })
+    ] : [
+      new HtmlWebpackPlugin({
+        template: './src/index.html',
+        filename: 'index.html'
+      }), 
+      new webpack.HotModuleReplacementPlugin(), 
+      new webpack.NamedModulesPlugin(), 
+      new webpack.DefinePlugin({
+        'NODE_ENV': JSON.stringify(NODE_ENV)
+      }), 
+      new OpenBrowserPlugin({
+        url: 'http://localhost:8080/'
+      }), 
+      new webpack.ProvidePlugin({
+        $: 'jquery',
+        jQuery: 'jquery'
+      })
+    ],
     devServer: {
       contentBase: path.resolve(__dirname, 'src'),
       hot: true,
