@@ -40,64 +40,52 @@ npm install jquery --save
 copy以下代码到webpack.config.js
 ```js
 var path = require('path'),
-    HtmlWebpackPlugin = require('html-webpack-plugin'),
-    webpack = require('webpack'),
-    ExtractTextPlugin = require("extract-text-webpack-plugin");
+HtmlWebpackPlugin = require('html-webpack-plugin'),
+webpack = require('webpack'),
+ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
-    entry: process.env.NODE_ENV === 'production' ? './webpack.entry.js' : [
-        'webpack-dev-server/client?http://localhost:8080',
-        'webpack/hot/only-dev-server',
-        './webpack.entry.js'
-    ],
-    output: {
-        filename: 'webpack.bundle.js',
-        path: path.resolve(__dirname, './build'),
-        publicPath: ''
+  entry: process.env.NODE_ENV === 'production' ? './webpack.entry.js': ['webpack-dev-server/client?http://localhost:8080', 'webpack/hot/only-dev-server', './webpack.entry.js'],
+  output: {
+    filename: 'webpack.bundle.js',
+    path: path.resolve(__dirname, './build'),
+    publicPath: ''
+  },
+  context: __dirname,
+  module: {
+    rules: [{
+      test: /\.css$/,
+      use: process.env.NODE_ENV === 'production' ? ExtractTextPlugin.extract({
+        fallback: "style-loader",
+        use: "css-loader"
+      }) : ['style-loader', 'css-loader?sourceMap']
     },
-    context: __dirname,
-    module: {
-        rules: [{
-            test: /\.css$/,
-            use: process.env.NODE_ENV === 'production' ? ExtractTextPlugin.extract({ fallback: "style-loader", use: "css-loader" }) : ['style-loader', 'css-loader?sourceMap']
-        }, {
-            test: /\.(jpg|png)$/,
-            use: [
-                'url-loader?limit=10000&name=img/[name].[ext]'
-            ]
-        }, {
-            test: /\.html$/,
-            use: [
-                'html-loader'
-            ]
-        }]
+    {
+      test: /\.(jpg|png)$/,
+      use: ['url-loader?limit=10000&name=img/[name].[ext]']
     },
-    plugins: process.env.NODE_ENV === 'production' ? [
-        new HtmlWebpackPlugin({
-            template: './src/index.html',
-            filename: 'index.html'
-        }),
-        new ExtractTextPlugin("style.css"),
-        new webpack.DefinePlugin({
-            'NODE_ENV': JSON.stringify(process.env.NODE_ENV)  // 直接传字符串的话webpack会把它当作代码片段来编译，这里用JSON.stringify()做字符串化处理
-        })
-    ] : [
-        new HtmlWebpackPlugin({
-            template: './src/index.html',
-            filename: 'index.html'
-        }),
-        new webpack.HotModuleReplacementPlugin(),
-        new webpack.NamedModulesPlugin(),
-        new webpack.DefinePlugin({
-            'NODE_ENV': JSON.stringify(process.env.NODE_ENV)  
-        })
-    ],
-    devServer: {
-        contentBase: path.resolve(__dirname, 'src'),
-        hot: true,
-        noInfo: false
-    },
-    devtool: 'source-map'
+    {
+      test: /\.html$/,
+      use: ['html-loader']
+    }]
+  },
+  plugins: process.env.NODE_ENV === 'production' ? [new HtmlWebpackPlugin({
+    template: './src/index.html',
+    filename: 'index.html'
+  }), new ExtractTextPlugin("style.css"), new webpack.DefinePlugin({
+    'NODE_ENV': JSON.stringify(process.env.NODE_ENV) // 直接传字符串的话webpack会把它当作代码片段来编译，这里用JSON.stringify()做字符串化处理
+  })] : [new HtmlWebpackPlugin({
+    template: './src/index.html',
+    filename: 'index.html'
+  }), new webpack.HotModuleReplacementPlugin(), new webpack.NamedModulesPlugin(), new webpack.DefinePlugin({
+    'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+  })],
+  devServer: {
+    contentBase: path.resolve(__dirname, 'src'),
+    hot: true,
+    noInfo: false
+  },
+  devtool: 'source-map'
 };
 ```
 相比于上一届lesson2的webpack.config.js，修改的地方有3个：  
@@ -108,7 +96,7 @@ module.exports = {
 copy以下代码到webpack.entry.js
 ```js
 if (NODE_ENV === 'development') {
-    require('./src/index.html');
+  require('./src/index.html');
 }
 require('./src/style.css');
 require('./src/main.js');

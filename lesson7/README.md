@@ -56,16 +56,15 @@ copy以下代码到index.js
 const loaderUtils = require('loader-utils');
 
 module.exports = function(source) { // source是字符串，包含静态资源的文件内容
-    // webpack2 默认使用缓存，启动webpack-dev-server时，只热更新被修改的模块
-    // 如果你想要禁止缓存功能，只要传入fasle参数即可
-    // this.cacheable(false);  
+  // webpack2 默认使用缓存，启动webpack-dev-server时，只热更新被修改的模块
+  // 如果你想要禁止缓存功能，只要传入fasle参数即可
+  // this.cacheable(false);  
+  const params = loaderUtils.parseQuery(this.query);
+  if (typeof params === "object" && params.signStr && typeof params.signStr === "string") {
+    source = '<!-- ' + params.signStr + ' -->\n' + source;
+  }
 
-    const params = loaderUtils.parseQuery(this.query);
-    if (typeof params === "object" && params.signStr && typeof params.signStr === "string") {
-        source = '<!-- ' + params.signStr + ' -->\n' + source;
-    }
-
-    return source;
+  return source;
 };
 ```
 做完这一步之后，咱们已经能够实现给html模块添加签名了，接着添加敏感词汇替换的功能。
@@ -74,50 +73,52 @@ module.exports = function(source) { // source是字符串，包含静态资源�
 'use strict';
 // loader-utils可以解析webpack配置文件中loader传入的参数
 const loaderUtils = require('loader-utils'),
-	path = require('path'),
-	fs = require('fs');
+path = require('path'),
+fs = require('fs');
 
 module.exports = function(source) { // source是字符串，包含静态资源的文件内容
-    // webpack2 默认使用缓存，启动webpack-dev-server时，只热更新被修改的模块
-    // 如果你想要禁止缓存功能，只要传入fasle参数即可
-    // this.cacheable(false);  
-
-    const params = loaderUtils.parseQuery(this.query),
-        callback = this.async(); // 异步解析模块
-    if (typeof params === "object") {
-    	// 添加个人签名
-    	if (params.signStr && typeof params.signStr === "string") {
-    	    source = '<!-- ' + params.signStr + ' -->\n' + source;
-    	}
-    	// 自动替换掉敏感词汇
-    	if (params.dataPath && typeof params.dataPath === "string") {
-    		let dataPath = path.resolve(params.dataPath);  // 转换为绝对路径
-    		this.addDependency(dataPath); // 添加依赖关系，当文件修改时会被webpack检测到
-
-            
-            // 异步读取敏感词汇的json文件
-            fs.readFile(dataPath, 'utf-8', function(err, text){
-                if(err) {
-                    console.error('数据文件路径出错', params.dataPath, '找不到该文件');
-                    return callback(err, source);
-                }
-                let data = JSON.parse(text),
-                    regexRule='(';
-
-                for (let value in data) {
-                    regexRule += data[value]+'|';
-                }
-                regexRule = regexRule.slice(0, -1) + ')';
-
-                let regex = new RegExp(regexRule, 'g'); // 正则替换
-                source = source.replace(regex, '');
-                callback(null, source); // 异步回调处理结果
-            });
-    	}else{
-            callback({error: 'dataPath is not legal'}, source);
-        }
-        // console.log(source);
+  // webpack2 默认使用缓存，启动webpack-dev-server时，只热更新被修改的模块
+  // 如果你想要禁止缓存功能，只要传入fasle参数即可
+  // this.cacheable(false);  
+  const params = loaderUtils.parseQuery(this.query),
+  callback = this.async(); // 异步解析模块
+  if (typeof params === "object") {
+    // 添加个人签名
+    if (params.signStr && typeof params.signStr === "string") {
+      source = '<!-- ' + params.signStr + ' -->\n' + source;
     }
+    // 自动替换掉敏感词汇
+    if (params.dataPath && typeof params.dataPath === "string") {
+      let dataPath = path.resolve(params.dataPath); // 转换为绝对路径
+      this.addDependency(dataPath); // 添加依赖关系，当文件修改时会被webpack检测到
+
+      // 异步读取敏感词汇的json文件
+      fs.readFile(dataPath, 'utf-8',
+      function(err, text) {
+        if (err) {
+          console.error('数据文件路径出错', params.dataPath, '找不到该文件');
+          return callback(err, source);
+        }
+        let data = JSON.parse(text),
+        regexRule = '(';
+
+        for (let value in data) {
+          regexRule += data[value] + '|';
+        }
+        regexRule = regexRule.slice(0, -1) + ')';
+
+        let regex = new RegExp(regexRule, 'g'); // 正则替换
+        source = source.replace(regex, '');
+        callback(null, source); // 异步回调处理结果
+      });
+    } else {
+      callback({
+        error: 'dataPath is not legal'
+      },
+      source);
+    }
+    // console.log(source);
+  }
 };
 ```
 至此，自动替换敏感词汇的功能也已经实现了，咱们试着将它运行到项目中去，在运行到具体项目之前，咱们需要先把它发布到npm的包管理服务器上，可供所有人在线下载使用。
@@ -157,11 +158,8 @@ npm install test-webpack-loader --save-dev
 webpack.config.js需要修改下html文件的loader配置
 ```js
 {
-    test: /\.html$/,
-    use: [
-        'html-loader?interpolate=require',
-        'test-webpack-loader?signStr=CreatedByKingvid&dataPath=./src/words.json'
-    ]
+  test: /\.html$/,
+  use: ['html-loader?interpolate=require', 'test-webpack-loader?signStr=CreatedByKingvid&dataPath=./src/words.json']
 }
 ```
 另外在body.html中加入一些敏感词汇
@@ -169,7 +167,7 @@ webpack.config.js需要修改下html文件的loader配置
 <h1 class="body-title">this is body</h1>
 <i class="fa fa-cog fa-spin fa-3x fa-fw"></i>
 <ul class="body-list">
-	<li class="body-list-item" id="body-input">你可以使用BannerPlugin给你的每个打包文件加上你的签名<br>webpack教程<br>by kingvid</li>
+  <li class="body-list-item" id="body-input">你可以使用BannerPlugin给你的每个打包文件加上你的签名<br>webpack教程<br>by kingvid</li>
 </ul>
 <button id="body-btn" class="btn">点我</button>
 <button id="pack-btn" class="btn">打包</button>

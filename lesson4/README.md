@@ -33,25 +33,24 @@ touch header/header.html header/header.scss header/header.js body/body.html body
 copy以下代码到index.html
 ```html
 <html>
-<head>
-    <meta charset="UTF-8">
-    <title>webpack-lesson4</title>
-</head>
-<body>
-    <header>
-        <!-- html-loader：用于引入对应资源  -->
-        ${require('./components/header/header.html')}
-    </header>
-    <section>
-        ${require('./components/body/body.html')}
-    </section>
-    <footer>
-        ${require('./components/footer/footer.html')}
-    </footer>
-
-    <!-- 跟webpack.config.js中的externals属性结合，作用包括：1、打包时会忽略jquery文件；2、可全局调用jquery -->
-    <script type="text/javascript" src="http://cdn.bootcss.com/jquery/3.2.0/jquery.min.js"></script>
-</body>
+ <head> 
+  <meta charset="UTF-8" /> 
+  <title>webpack-lesson4</title> 
+ </head> 
+ <body> 
+  <header> 
+   <!-- html-loader：用于引入对应资源  --> 
+   ${require('./components/header/header.html')} 
+  </header> 
+  <section>
+    ${require('./components/body/body.html')} 
+  </section> 
+  <footer>
+    ${require('./components/footer/footer.html')} 
+  </footer> 
+  <!-- 跟webpack.config.js中的externals属性结合，作用包括：1、打包时会忽略jquery文件；2、可全局调用jquery --> 
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.0/jquery.min.js"></script>  
+ </body>
 </html>
 ```
 copy以下代码到header.html
@@ -62,7 +61,7 @@ copy以下代码到body.html
 ```html
 <h1 class="body-title">this is body</h1>
 <ul class="body-list">
-    <li class="body-list-item" id="body-input">你可以使用BannerPlugin给你的每个打包文件加上你的签名<br>webpack教程<br>by kingvid</li>
+  <li class="body-list-item" id="body-input">你可以使用BannerPlugin给你的每个打包文件加上你的签名<br>webpack教程<br>by kingvid</li>
 </ul>
 ```
 copy以下代码到footer.html
@@ -72,54 +71,55 @@ copy以下代码到footer.html
 copy以下代码到header.scss
 ```css
 .header-title{
-    font-style: italic;
-    background-color: rgba(100,100,100,0.9);
-    color: #fff;
+  font-style: italic;
+  background-color: rgba(100,100,100,0.9);
+  color: #fff;
 }
 ```
 copy以下代码到body.scss
 ```css
 .body-title{
-    border-radius: 4px;
-    border: solid 1px #ccc; 
-    color: #fff;
-    background-color: rgba(0,0,0,0.9);
+  border-radius: 4px;
+  border: solid 1px #ccc; 
+  color: #fff;
+  background-color: rgba(0,0,0,0.9);
 }
 .body-list{
-    margin: auto;
-    list-style: none;
+  margin: auto;
+  list-style: none;
 
-    .body-list-item{
-        font-size: 20px;
-    }
+  .body-list-item{
+    font-size: 20px;
+  }
 }
 ```
 copy以下代码到footer.scss
 ```css
 .footer-title{
-    color: #fff;
-    background-color: rgba(200,200,200,0.9);
+  color: #fff;
+  background-color: rgba(200,200,200,0.9);
 }
 ```
 copy以下代码到body.js
 ```js
 // 这里不再需要再import或require jquery，在webpack.config.js中新增了externals属性，让jquery可以在webpack整个运行环境中被调用
 let element = $("#body-input"),
-    str = element.html(),
-    progress = 0,
-    timer = setInterval(() => {
-        let current = str.substr(progress, 1);
-        if (current == '<') {
-            progress = str.indexOf('>', progress) + 1;
-        } else {
-            progress++;
-        }
-        element.html(str.substring(0, progress) + (progress && 1 ? '_' : ''));
-        if (progress >= str.length) {
-            clearInterval(timer);
-            element.html(str.substring(0, progress));
-        }
-    }, 150);
+str = element.html(),
+progress = 0,
+timer = setInterval(() = >{
+  let current = str.substr(progress, 1);
+  if (current == '<') {
+    progress = str.indexOf('>', progress) + 1;
+  } else {
+    progress++;
+  }
+  element.html(str.substring(0, progress) + (progress && 1 ? '_': ''));
+  if (progress >= str.length) {
+    clearInterval(timer);
+    element.html(str.substring(0, progress));
+  }
+},
+150);
 ```
 配置package.json命令行
 ```
@@ -139,103 +139,98 @@ npm install --save-dev babel-loader babel-core babel-preset-env
 copy以下代码到webpack.config.js
 ```js
 var path = require('path'),
-    HtmlWebpackPlugin = require('html-webpack-plugin'),
-    webpack = require('webpack'),
-    ExtractTextPlugin = require("extract-text-webpack-plugin"),
-    OpenBrowserPlugin = require('open-browser-webpack-plugin');
+HtmlWebpackPlugin = require('html-webpack-plugin'),
+webpack = require('webpack'),
+ExtractTextPlugin = require("extract-text-webpack-plugin"),
+OpenBrowserPlugin = require('open-browser-webpack-plugin');
 
 module.exports = {
-    entry: process.env.NODE_ENV === 'production' ? './webpack.entry' : [
-        'webpack-dev-server/client?http://localhost:8080',
-        'webpack/hot/only-dev-server',
-        './webpack.entry.js'
-    ],
-    output: {
-        filename: 'webpack.bundle.js',
-        path: path.resolve(__dirname, './build'),
-        publicPath: ''
+  entry: process.env.NODE_ENV === 'production' ? './webpack.entry': ['webpack-dev-server/client?http://localhost:8080', 'webpack/hot/only-dev-server', './webpack.entry.js'],
+  output: {
+    filename: 'webpack.bundle.js',
+    path: path.resolve(__dirname, './build'),
+    publicPath: ''
+  },
+  context: __dirname,
+  module: {
+    rules: [{
+      test: /\.scss$/,
+      // 解析scss文件
+      use: process.env.NODE_ENV === 'production' ? ExtractTextPlugin.extract({
+        fallback: "style-loader",
+        use: ["css-loader", "sass-loader"]
+      }) : ['style-loader', 'css-loader?sourceMap', 'sass-loader?sourceMap']
     },
-    context: __dirname,
-    module: {
-        rules: [{
-            test: /\.scss$/, // 解析scss文件
-            use: process.env.NODE_ENV === 'production' ? ExtractTextPlugin.extract({ fallback: "style-loader", use: ["css-loader", "sass-loader"] }) : ['style-loader', 'css-loader?sourceMap', 'sass-loader?sourceMap']
-        }, {
-            test: /\.(jpg|png)$/,
-            use: [
-                'url-loader?limit=10000&name=img/[name].[ext]'
-            ]
-        }, {
-            test: /\.html$/,
-            use: {
-                loader: 'html-loader',
-                options: {
-                    interpolate: 'require'
-                }
-            }
-        }, {
-            test: /\.js$/,
-            exclude: /node_modules/,
-            use: {
-                loader: 'babel-loader',
-                options: {
-                    presets: ['env']
-                }
-            }
-        }]
+    {
+      test: /\.(jpg|png)$/,
+      use: ['url-loader?limit=10000&name=img/[name].[ext]']
     },
-    plugins: process.env.NODE_ENV === 'production' ? [
-        new HtmlWebpackPlugin({
-            template: './src/index.html',
-            filename: 'index.html'
-        }),
-        new ExtractTextPlugin("style.css"),
-        new webpack.DefinePlugin({
-            'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
-        }),
-        // 压缩js文件
-        new webpack.optimize.UglifyJsPlugin({
-            compress: {
-                warnings: true
-            }
-        }),
-
-        // 给打包文件加上你的签名
-        new webpack.BannerPlugin({
-            banner: 'This is created by kingvid'
-        })
-    ] : [
-        new HtmlWebpackPlugin({
-            template: './src/index.html',
-            filename: 'index.html'
-        }),
-        new webpack.HotModuleReplacementPlugin(),
-        new webpack.NamedModulesPlugin(),
-        new webpack.DefinePlugin({
-            'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
-        }),
-        new OpenBrowserPlugin({ url: 'http://localhost:8080/' }) // 自动在浏览器中打开 http://localhost:8080/
-    ],
-    devServer: {
-        contentBase: path.resolve(__dirname, 'src'),
-        hot: true,
-        noInfo: false
-    },
-    devtool: 'source-map',
-
-    // 打包时将不会把以下第三方库打包进webpack.bundle.js中但可被webpack全局调用，比如说jquery，但需要在html文件中用script引入jquery
-    externals: {
-        jquery: 'jQuery'
-    },
-
-    // 改变模块的处理方式
-    resolve: {
-        extensions: ['.js', '.scss', '.html'], // eg：入口文件改成webpack.entry，打包时webpack会先检索webpack.entry文件，返回结果为空时给文件补上.js文件尾缀再继续检索，依此类推。
-        alias: {
-            // 这里可以给一些常用的模块添加别名，可以减少webpack查找该模块的时间，比如说：vue
-            // 'vue': 'vue/dist/vue.common.js'
+    {
+      test: /\.html$/,
+      use: {
+        loader: 'html-loader',
+        options: {
+          interpolate: 'require'
         }
+      }
+    },
+    {
+      test: /\.js$/,
+      exclude: /node_modules/,
+      use: {
+        loader: 'babel-loader',
+        options: {
+          presets: ['env']
+        }
+      }
+    }]
+  },
+  plugins: process.env.NODE_ENV === 'production' ? [new HtmlWebpackPlugin({
+    template: './src/index.html',
+    filename: 'index.html'
+  }), new ExtractTextPlugin("style.css"), new webpack.DefinePlugin({
+    'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+  }),
+  // 压缩js文件
+  new webpack.optimize.UglifyJsPlugin({
+    compress: {
+      warnings: true
     }
+  }),
+
+  // 给打包文件加上你的签名
+  new webpack.BannerPlugin({
+    banner: 'This is created by kingvid'
+  })] : [new HtmlWebpackPlugin({
+    template: './src/index.html',
+    filename: 'index.html'
+  }), new webpack.HotModuleReplacementPlugin(), new webpack.NamedModulesPlugin(), new webpack.DefinePlugin({
+    'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+  }), new OpenBrowserPlugin({
+    url: 'http://localhost:8080/'
+  }) // 自动在浏览器中打开 http://localhost:8080/
+  ],
+  devServer: {
+    contentBase: path.resolve(__dirname, 'src'),
+    hot: true,
+    noInfo: false
+  },
+  devtool: 'source-map',
+
+  // 打包时将不会把以下第三方库打包进webpack.bundle.js中但可被webpack全局调用，比如说jquery，但需要在html文件中用script引入jquery
+  externals: {
+    jquery: 'jQuery'
+  },
+
+  // 改变模块的处理方式
+  resolve: {
+    extensions: ['.js', '.scss', '.html'],
+    // eg：入口文件改成webpack.entry，打包时webpack会先检索webpack.entry文件，返回结果为空时给文件补上.js文件尾缀再继续检索，依此类推。
+    alias: {
+      // 这里可以给一些常用的模块添加别名，可以减少webpack查找该模块的时间，比如说：vue
+      // 'vue': 'vue/dist/vue.common.js'
+    }
+  }
 };
 ```
 修改的地方主要有：  
@@ -254,15 +249,15 @@ const cssAndJsContext = require.context('./src', true, /\.(js|scss)$/i);
 console.log(cssAndJsContext.keys());
 // 结果是：["./base.scss","./components/body/body.js","./components/body/body.scss","./components/footer/footer.js","./components/footer/footer.scss","./components/header/header.js","./components/header/header.scss"]
 // cssAndJsContext('./base.scss') 相当于 require("./src/base.scss");
-cssAndJsContext.keys().forEach((key) => {
-    cssAndJsContext(key);
+cssAndJsContext.keys().forEach((key) = >{
+  cssAndJsContext(key);
 });
 
 if (NODE_ENV === 'development') {
-    const htmlContext = require.context('./src', true, /\.html$/i);
-    htmlContext.keys().forEach((key) => {
-        htmlContext(key);
-    });
+  const htmlContext = require.context('./src', true, /\.html$/i);
+  htmlContext.keys().forEach((key) = >{
+    htmlContext(key);
+  });
 }
 ```
 `require.context`的作用是可以把在自己设置的目录下所有符合条件的文件一次性require到webpack运行环境中，它有三个参数：  
