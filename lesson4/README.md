@@ -185,30 +185,39 @@ module.exports = {
       }
     }]
   },
-  plugins: process.env.NODE_ENV === 'production' ? [new HtmlWebpackPlugin({
-    template: './src/index.html',
-    filename: 'index.html'
-  }), new ExtractTextPlugin("style.css"), new webpack.DefinePlugin({
-    'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
-  }),
-  // 压缩js文件
-  new webpack.optimize.UglifyJsPlugin({
-    compress: {
-      warnings: true
-    }
-  }),
+  plugins: process.env.NODE_ENV === 'production' ? [
+    new HtmlWebpackPlugin({
+      template: './src/index.html',
+      filename: 'index.html'
+    }), 
+    new ExtractTextPlugin("style.css"), 
+    new webpack.DefinePlugin({
+      'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+    }),
+    // 压缩js文件
+    new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        warnings: true
+      }
+    }),
 
-  // 给打包文件加上你的签名
-  new webpack.BannerPlugin({
-    banner: 'This is created by kingvid'
-  })] : [new HtmlWebpackPlugin({
-    template: './src/index.html',
-    filename: 'index.html'
-  }), new webpack.HotModuleReplacementPlugin(), new webpack.NamedModulesPlugin(), new webpack.DefinePlugin({
-    'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
-  }), new OpenBrowserPlugin({
-    url: 'http://localhost:8080/'
-  }) // 自动在浏览器中打开 http://localhost:8080/
+    // 给打包文件加上你的签名
+    new webpack.BannerPlugin({
+      banner: 'This is created by kingvid'
+    })
+  ] : [
+    new HtmlWebpackPlugin({
+      template: './src/index.html',
+      filename: 'index.html'
+    }), 
+    new webpack.HotModuleReplacementPlugin(), 
+    new webpack.NamedModulesPlugin(), 
+    new webpack.DefinePlugin({
+      'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+    }), 
+    new OpenBrowserPlugin({
+      url: 'http://localhost:8080/'
+    }) // 自动在浏览器中打开 http://localhost:8080/
   ],
   devServer: {
     contentBase: path.resolve(__dirname, 'src'),
