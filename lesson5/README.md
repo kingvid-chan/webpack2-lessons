@@ -157,13 +157,13 @@ import "fontAwesome";
 import "bootJs";
 
 const cssAndJsContext = require.context('./src', true, /\.(js|scss)$/i);
-cssAndJsContext.keys().forEach((key) = >{
+cssAndJsContext.keys().forEach((key) => {
   cssAndJsContext(key);
 });
 
 if (NODE_ENV === 'development') {
   const htmlContext = require.context('./src', true, /\.html$/i);
-  htmlContext.keys().forEach((key) = >{
+  htmlContext.keys().forEach((key) => {
     htmlContext(key);
   });
 }
@@ -309,13 +309,13 @@ import "fontAwesome";
 import "bootJs";
 
 const cssAndJsContext = require.context('./src', true, /[^\/][^abc]\.(js|scss)$/i); // 修改了正则表达式，使a.js,b.js,c.js不被引入
-cssAndJsContext.keys().forEach((key) = >{
+cssAndJsContext.keys().forEach((key) => {
   cssAndJsContext(key);
 });
 
 if (NODE_ENV === 'development') {
   const htmlContext = require.context('./src', true, /\.html$/i);
-  htmlContext.keys().forEach((key) = >{
+  htmlContext.keys().forEach((key) => {
     htmlContext(key);
   });
 }
@@ -350,25 +350,24 @@ console.log("I am C");
 ```js
 // 这里不再需要再import或require jquery，在webpack.config.js中新增了externals属性，让jquery可以在webpack整个运行环境中被调用
 var element = $("#body-input"),
-str = element.html(),
-progress = 0,
-timer = setInterval(() = >{
-  let current = str.substr(progress, 1);
-  if (current == '<') {
-    progress = str.indexOf('>', progress) + 1;
-  } else {
-    progress++;
-  }
-  element.html(str.substring(0, progress) + (progress && 1 ? '_': ''));
-  if (progress >= str.length) {
-    clearInterval(timer);
-    element.html(str.substring(0, progress));
-  }
-},
-150);
+  str = element.html(),
+  progress = 0,
+  timer = setInterval(() => {
+    let current = str.substr(progress, 1);
+    if (current == '<') {
+      progress = str.indexOf('>', progress) + 1;
+    } else {
+      progress++;
+    }
+    element.html(str.substring(0, progress) + (progress && 1 ? '_': ''));
+    if (progress >= str.length) {
+      clearInterval(timer);
+      element.html(str.substring(0, progress));
+    }
+  },150);
 
 require('../../public/a.js'); // 这里会立即执行，会被打包到bundle.js文件中
-$("#body-btn").click(() = >{
+$("#body-btn").click(() => {
   // require.ensure(dependencies: String[], callback: function(require), chunkName: String)
   // dependencies：在执行之前加载完模块依赖
   // callback：模块依赖加载完全之后执行该回调函数，require函数传入该回调函数中，供函数内部调用
@@ -377,8 +376,7 @@ $("#body-btn").click(() = >{
   function(require) {
     require('../../public/c.js');
     // 注意b.js在这里是不会被执行的，它只是被加载了，如果要调用的话，需要执行`require('../../public/b.js')`
-  },
-  'bc');
+  },'bc');
 });
 ```
 运行`npm start`，效果如下：  
