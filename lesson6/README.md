@@ -50,10 +50,7 @@ new webpackDevServer(compiler, {
       // 代理到本地3000端口，也就是咱们node运行的端口
     }
   }
-}).listen(8080,
-function() {
-  console.log('App (dev) is now running on port 8080!');
-});
+}).listen(8080,function() {console.log('App (dev) is now running on port 8080!');});
 
 // 生成随机数据，测试时非常方便
 app.get('/mockData',
@@ -90,10 +87,7 @@ function(req, res, next) {
   });
 });
 // 监听3000端口
-app.listen(3000,
-function() {
-  console.log('Proxy Server is running on port 3000!');
-});
+app.listen(3000,function() {console.log('Proxy Server is running on port 3000!');});
 ```
 copy以下代码到webpack.config.js，自此不需要用npm命令来打包了，也就可以不需要用到process.env.NODE_ENV的值，为了区分开发和生产环境，这里把webpack.config.js exports成一个函数，并通过传递参数NODE_ENV，最终返回一个配置对象
 ```js
@@ -105,7 +99,7 @@ const path = require('path'),
   extractVendor = new ExtractTextPlugin('vendor.css'),
   extractStyle = new ExtractTextPlugin('style.css');
 
-module.exports = (NODE_ENV) = >{
+module.exports = (NODE_ENV) => {
   let config = {
     entry: NODE_ENV === 'production' ? {
         vendor: ['jquery', 'bootJs'],
@@ -238,37 +232,35 @@ copy以下代码到body.html中
 copy以下代码到body.js中
 ```js
 var element = $("#body-input"),
-str = element.html(),
-progress = 0,
-timer = setInterval(() = >{
-  let current = str.substr(progress, 1);
-  if (current == '<') {
-    progress = str.indexOf('>', progress) + 1;
-  } else {
-    progress++;
-  }
-  element.html(str.substring(0, progress) + (progress && 1 ? '_': ''));
-  if (progress >= str.length) {
-    clearInterval(timer);
-    element.html(str.substring(0, progress));
-  }
-},
-150);
+  str = element.html(),
+  progress = 0,
+  timer = setInterval(() => {
+    let current = str.substr(progress, 1);
+    if (current == '<') {
+      progress = str.indexOf('>', progress) + 1;
+    } else {
+      progress++;
+    }
+    element.html(str.substring(0, progress) + (progress && 1 ? '_': ''));
+    if (progress >= str.length) {
+      clearInterval(timer);
+      element.html(str.substring(0, progress));
+    }
+  },150);
 
 require('../../public/a.js');
-$("#body-btn").click(() = >{
+$("#body-btn").click(() => {
   require.ensure(['../../public/b.js'],
   function(require) {
     require('../../public/c.js');
-  },
-  'bc');
+  },'bc');
 });
 
-$("#pack-btn").click(() = >{
+$("#pack-btn").click(() => {
   $(".mask").addClass('active');
   $.ajax({
     url: '/build',
-    success: (data) = >{
+    success: (data) => {
       if (data.success) {
         alert('打包成功，请查看build文件夹');
       } else {
@@ -279,10 +271,10 @@ $("#pack-btn").click(() = >{
   });
 });
 
-$("#getData-btn").click(() = >{
+$("#getData-btn").click(() => {
   $.ajax({
     url: '/mockData',
-    success: (data) = >{
+    success: (data) => {
       let str = '';
       str = '<h1>' + data.date + '</h1><ul>';
       str += '<li>' + data.string + '</li>' + '<li>' + data.paragraph + '</li>' + '<li>' + data.number + '</li>';
