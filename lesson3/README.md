@@ -69,17 +69,26 @@ module.exports = {
       use: ['html-loader']
     }]
   },
-  plugins: process.env.NODE_ENV === 'production' ? [new HtmlWebpackPlugin({
-    template: './src/index.html',
-    filename: 'index.html'
-  }), new ExtractTextPlugin("style.css"), new webpack.DefinePlugin({
-    'NODE_ENV': JSON.stringify(process.env.NODE_ENV) // 直接传字符串的话webpack会把它当作代码片段来编译，这里用JSON.stringify()做字符串化处理
-  })] : [new HtmlWebpackPlugin({
-    template: './src/index.html',
-    filename: 'index.html'
-  }), new webpack.HotModuleReplacementPlugin(), new webpack.NamedModulesPlugin(), new webpack.DefinePlugin({
-    'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
-  })],
+  plugins: process.env.NODE_ENV === 'production' ? [
+    new HtmlWebpackPlugin({
+      template: './src/index.html',
+      filename: 'index.html'
+    }), 
+    new ExtractTextPlugin("style.css"), 
+    new webpack.DefinePlugin({
+      'NODE_ENV': JSON.stringify(process.env.NODE_ENV) // 直接传字符串的话webpack会把它当作代码片段来编译，这里用JSON.stringify()做字符串化处理
+    })
+  ] : [
+    new HtmlWebpackPlugin({
+      template: './src/index.html',
+      filename: 'index.html'
+    }), 
+    new webpack.HotModuleReplacementPlugin(), 
+    new webpack.NamedModulesPlugin(), 
+    new webpack.DefinePlugin({
+      'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+    })
+  ],
   devServer: {
     contentBase: path.resolve(__dirname, 'src'),
     hot: true,
