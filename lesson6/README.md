@@ -22,18 +22,18 @@ touch app.js
 ```
 copy进去以下代码
 ```js
-# ! /usr/bin / env node--harmony
+#! /usr/bin/env node --harmony
 
 const fs = require('fs'),
-path = require('path'),
-gutil = require('gulp-util'),
-webpack = require('webpack'),
-webpackDevServer = require('webpack-dev-server'),
-webpack_config = require('./webpack.config'),
-Mock = require('mockjs'),
-Random = Mock.Random,
-express = require('express'),
-app = express();
+  path = require('path'),
+  gutil = require('gulp-util'),
+  webpack = require('webpack'),
+  webpackDevServer = require('webpack-dev-server'),
+  webpack_config = require('./webpack.config'),
+  Mock = require('mockjs'),
+  Random = Mock.Random,
+  express = require('express'),
+  app = express();
 
 // 启动webpack-dev-server
 const compiler = webpack(webpack_config('development'));
@@ -98,12 +98,12 @@ function() {
 copy以下代码到webpack.config.js，自此不需要用npm命令来打包了，也就可以不需要用到process.env.NODE_ENV的值，为了区分开发和生产环境，这里把webpack.config.js exports成一个函数，并通过传递参数NODE_ENV，最终返回一个配置对象
 ```js
 const path = require('path'),
-HtmlWebpackPlugin = require('html-webpack-plugin'),
-webpack = require('webpack'),
-ExtractTextPlugin = require("extract-text-webpack-plugin"),
-OpenBrowserPlugin = require('open-browser-webpack-plugin'),
-extractVendor = new ExtractTextPlugin('vendor.css'),
-extractStyle = new ExtractTextPlugin('style.css');
+  HtmlWebpackPlugin = require('html-webpack-plugin'),
+  webpack = require('webpack'),
+  ExtractTextPlugin = require("extract-text-webpack-plugin"),
+  OpenBrowserPlugin = require('open-browser-webpack-plugin'),
+  extractVendor = new ExtractTextPlugin('vendor.css'),
+  extractStyle = new ExtractTextPlugin('style.css');
 
 module.exports = (NODE_ENV) = >{
   let config = {
@@ -380,17 +380,17 @@ function() {
 ```
 修改app.js
 ```js
-# ! /usr/bin / env node--harmony
+#! /usr/bin/env node --harmony
 
 const fs = require('fs'),
-path = require('path'),
-gutil = require('gulp-util'),
-webpack = require('webpack'),
-webpack_config = require('./webpack.config'),
-Mock = require('mockjs'),
-Random = Mock.Random,
-express = require('express'),
-app = express();
+  path = require('path'),
+  gutil = require('gulp-util'),
+  webpack = require('webpack'),
+  webpack_config = require('./webpack.config'),
+  Mock = require('mockjs'),
+  Random = Mock.Random,
+  express = require('express'),
+  app = express();
 
 // 用子进程开启webpack-dev-server，可按需对子进程关闭和重启
 /* 可运行以下语句关闭该子进程
