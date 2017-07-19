@@ -11,7 +11,7 @@
 2、npm publish：发布npm包；  
 3、loader API：通过在loader函数中使用`this`可以调用loader的API；  
 4、[loader-utils](https://github.com/webpack/loader-utils)：推荐使用 loader-utils 来处理loader被调用时传递进来的参数；  
-5、从webpack2.0开始，webpack默认支持对json文件的解析，而不需要引入json-loader了；
+5、从webpack2.0开始，webpack默认支持对json文件的解析，而不需要引入json-loader了；  
 6、异步解析：根据项目实际需要，解析文件时可能需要依赖于其他文件，直到该文件异步读取完毕之后再对原文件做解析。
 
 ## 课程内容
@@ -93,8 +93,7 @@ module.exports = function(source) { // source是字符串，包含静态资源�
       this.addDependency(dataPath); // 添加依赖关系，当文件修改时会被webpack检测到
 
       // 异步读取敏感词汇的json文件
-      fs.readFile(dataPath, 'utf-8',
-      function(err, text) {
+      fs.readFile(dataPath, 'utf-8', function(err, text) {
         if (err) {
           console.error('数据文件路径出错', params.dataPath, '找不到该文件');
           return callback(err, source);
@@ -114,8 +113,7 @@ module.exports = function(source) { // source是字符串，包含静态资源�
     } else {
       callback({
         error: 'dataPath is not legal'
-      },
-      source);
+      }, source);
     }
     // console.log(source);
   }
