@@ -254,14 +254,15 @@ module.exports = {
 
   // webpack插件
   plugins: [
-  // 生成html文件
-  new HtmlWebpackPlugin({
-    template: './src/index.html',
-    filename: 'index.html'
-  }),
+    // 生成html文件
+    new HtmlWebpackPlugin({
+      template: './src/index.html',
+      filename: 'index.html'
+    }),
 
-  // 生成css文件，一下括号中的'style.css' 是打包后的css文件名，可自定义
-  new ExtractTextPlugin("style.css")]
+    // 生成css文件，一下括号中的'style.css' 是打包后的css文件名，可自定义
+    new ExtractTextPlugin("style.css")
+  ]
 };
 ```
 由于已经使用 html-webpack-plugin 以 index.html 为模版生成了html文件，webpack打包时会引入 index.html ，所以在webpack.entry.js中就没必要再次 `require('index.html')` ，修改完的webpack.entry.js如下：  
